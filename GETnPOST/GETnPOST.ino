@@ -1,22 +1,16 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
+
+//interrupt
 #include <Ticker.h>
 Ticker periodicTicker;
 
-const char* ssid = "Vonia";
-const char* password = "08062005";
+const char* ssid = "yourSSID";
+const char* password = "yourwifipassword";
 
 //Your Domain name with URL path or IP address with path
-String serverTarget1 = "http://192.168.1.10:3000/api/control/getled2";
-const char* serverTarget2 = "http://192.168.1.10:3000/api/telemetry/device1";
-
-// the following variables are unsigned longs because the time, measured in
-// milliseconds, will quickly become a bigger number than can be stored in an int.
-unsigned long lastTime = 0;
-// Timer set to 10 minutes (600000)
-//unsigned long timerDelay = 600000;
-// Set timer to 1 seconds (1000)
-unsigned long timerDelay = 1000;
+String serverTarget1 = "http://ip:3000/api/control/getled2";
+const char* serverTarget2 = "http://ip:3000/api/telemetry/device1";
 
 void setup() {
   Serial.begin(115200); 
@@ -31,7 +25,7 @@ void setup() {
   Serial.print("Connected to WiFi network with IP Address: ");
   Serial.println(WiFi.localIP());
  
-  Serial.println("Timer set to 1 seconds (timerDelay variable), it will take 1 seconds before publishing the first reading.");
+  Serial.println("Timer set to 10 seconds (timerDelay variable), it will take 10 seconds before publishing the first reading.");
   periodicTicker.attach_ms(10000, POST);
 
 }
@@ -46,7 +40,9 @@ void loop() {
 
     http.addHeader("Content-Type", "application/json");
     http.addHeader("Accept", "application/json");
-    http.addHeader("Accept", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQyODMyNTdjNjJlYTViZGMxY2FkN2YiLCJpYXQiOjE2NTAwOTQwMDB9.BbZxYIj4MMwW-J9ALau7Fdxc2Z2G9hDptrCR8nruczc");
+    
+    // If you used token
+    // http.addHeader("Accept", "Bearer yourtoken");
       // Send HTTP GET request
       int httpResponseCode1 = http.GET();
         if (httpResponseCode1>0) {
@@ -74,7 +70,9 @@ void POST(){
 
     http.addHeader("Content-Type", "application/json");
     http.addHeader("Accept", "application/json");
-    http.addHeader("Accept", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQyODMyNTdjNjJlYTViZGMxY2FkN2YiLCJpYXQiOjE2NTAwOTQwMDB9.BbZxYIj4MMwW-J9ALau7Fdxc2Z2G9hDptrCR8nruczc");
+    
+    // If you used token
+    // http.addHeader("Accept", "Bearer yourtoken");
                // Data to send with HTTP POST
       float dataa= random(10.0, 100.0);
       String packet = "{\"data\": \"" + String(dataa) + "\"" + "}";
